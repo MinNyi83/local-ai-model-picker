@@ -5,7 +5,7 @@ Native desktop app (no TUI, no WebUI) based on Codacus' video
 (https://www.youtube.com/watch?v=tek-IY9BRWc).
 
 ## 🚀 Quickest start
-- 🪟 Windows: double-click `dist/LocalAIModelPicker.exe` (no Python needed), or `run.bat`
+- 🪟 Windows: `run.bat` (or build the exe — see 📁 Files)
 - 🍎 macOS: double-click `run_mac.command` (first time: `chmod +x run_mac.command`)
 - 🐧 Linux: `chmod +x run.sh && ./run.sh`
 
@@ -23,7 +23,7 @@ open dist/LocalAIModelPicker.app   # or drag into /Applications
 - 🖥️ Hardware: auto-detects OS, CPU, RAM, GPU, VRAM
 - 💡 Recommend: picks a model + tier from your VRAM/RAM
 - 🛠️ Setup: guides for 7 backends (llama.cpp, Ollama, LM Studio, Cline, vLLM, MLX, Strata)
-- 📊 Models: 13-model ladder + VRAM tiers + live HuggingFace fetch (incl. uncensored)
+- 📊 Models: 45-model database + 10-tier VRAM ladder + live HuggingFace fetch (incl. uncensored, auto-saved)
 - ⌨️ Command: starter command + notes + copy/run + customize choice
 - 🏠 Home: quick start + hardware snapshot + actions
 - ℹ️ About: creator credits + YouTube reference
@@ -34,12 +34,16 @@ open dist/LocalAIModelPicker.app   # or drag into /Applications
 ## 📁 Files
 - `gui.py` - GUI app source (Tkinter)
 - `app.py` - TUI app source (optional)
-- `dist/LocalAIModelPicker.exe` - Windows standalone (no Python)
 - `run.bat` / `run.ps1` - Windows launchers
-- `run.sh` - macOS/Linux launcher
+- `run.sh` / `run_mac.command` - macOS/Linux launchers
+- `build_mac.sh` - build a macOS .app bundle (run on a Mac)
 - `transcript.txt` - full transcript (607 snippets)
+- `models_cache.json` - saved HuggingFace model data
 - `fetch_transcript.py` - re-fetch transcript
+- `BEGINNER_GUIDE.md` - beginner guide (also in-app)
 - `STEP_BY_STEP.md` - detailed guide
+
+💡 To get the Windows `.exe`: run `pyinstaller --onefile --windowed --name "LocalAIModelPicker" --add-data "transcript.txt;." --add-data "BEGINNER_GUIDE.md;." --add-data "models_cache.json;." gui.py`
 
 ## ⌨️ Usage
 1. Launch the app
