@@ -1,0 +1,607 @@
+[0.00] How much VRAM do you actually need to
+[2.44] run a good AI model? What if I told you
+[5.04] that with a little over 4 GB of VRAM,
+[7.92] you can run some of the best local
+[9.76] models capable of much bigger work than
+[12.32] you need in your daily life? But that's
+[14.36] not all we're here for. We want to run
+[16.64] the best models our own hardware can
+[18.80] handle, so we get the most out of it.
+[21.32] So, in this video, we'll go through the
+[23.08] models you can run on anything from a 4
+[25.48] GB card to a 16 GB card, from 35 billion
+[29.40] parameters all the way up to 700
+[31.88] billion, all on local hardware with the
+[34.40] right techniques. And by the end, you'll
+[36.64] know exactly how to set them up
+[38.36] yourself. So, let's get started.
+[42.56] Okay, to understand how a small graphics
+[45.28] card can run a model that's far too big
+[47.52] for it, we first need to look at what a
+[49.72] normal model does when it writes one
+[51.84] token. In most models, every token goes
+[54.84] through every weight. If the model has
+[57.12] 30 billion parameters, all 30 billion
+[60.04] get used, and then the whole thing runs
+[62.20] again for the next word. We call these
+[64.76] dense models. A mixture of experts model
+[67.56] is built differently. In each layer, the
+[70.24] big block that does most of the work is
+[72.44] split into many smaller pieces called
+[74.68] experts, and a small router picks which
+[77.28] ones to use for this token. Qwen 3.6 has
+[80.48] 256 experts in every layer, and the
+[83.80] router picks eight. So, out of 35
+[86.84] billion parameters, only about 3 billion
+[89.44] do any work on a given token. Now, that
+[92.12] sounds like a model wasting most of
+[94.04] itself. If only a tenth of it is
+[96.16] working, wouldn't a dense model the same
+[98.52] size just be smarter? And the answer is
+[101.24] yes. I went through the labs that
+[103.40] released both kinds in the same
+[105.16] generation at around the same size, and
+[107.64] compared them on the Artificial Analysis
+[110.00] Intelligence Index. In every same lab
+[112.88] pair I checked, the dense model scored
+[115.12] higher. Gemma 4's 31 billion dense model
+[118.76] beats its 26 billion mixture of expert
+[121.53] sibling by up to eight points. Qwen's
+[124.33] result is even harder on the experts
+[126.61] because there the dense model is the
+[128.49] smaller one. Qwen 3.6 at 27 billion
+[132.17] beats Qwen 3.6 at 35 billion with eight
+[135.69] billion fewer parameters. So, if a dense
+[138.57] model is smarter for its size, why is
+[140.81] this whole video about the other kind?
+[143.25] Because to run a dense model at a usable
+[145.53] speed, all of it has to fit in your
+[147.73] VRAM. It reads every weight for every
+[150.61] token, and your system RAM is much
+[152.89] slower than VRAM. So, the moment part of
+[155.05] it sits in RAM, every token ends up
+[157.49] waiting on that slow memory. That means
+[160.05] a 27 billion dense model at four bits
+[163.13] needs a card that can hold around 15 GB.
+[166.53] A mixture of experts model the same size
+[168.85] doesn't need that. It only reads the
+[171.13] eight experts the router picked in each
+[173.25] layer. So, those experts can sit in RAM,
+[176.17] and the graphics card only has to hold
+[178.13] the small part that's busy all the time.
+[180.89] I saw how big that difference is on my
+[183.05] old GTX 1060, which has 6 GB of VRAM. A
+[187.09] 27 billion dense Qwen model ran at about
+[190.25] a third of a token per second. Qwen 3.6
+[193.33] at 35 billion with its experts in RAM
+[196.49] ran at 17 tokens a second. The bigger
+[199.49] model was 50 times faster on the same
+[202.09] card. So, how do you actually split a
+[204.53] model like that between your graphics
+[206.29] card and your RAM?
+[209.53] The program that does that split is
+[211.29] called an inference engine, and you have
+[213.53] a lot of them to choose from. vLLM and
+[216.41] SGang are built for servers where the
+[218.81] whole model sits on big GPUs. MLX is
+[222.13] built for Apple silicon, and Ollama and
+[224.73] LM Studio are friendly apps that wrap an
+[227.17] engine for you.
+[228.41] For this video, I'm going with llama.cpp
+[230.97] because it's the most compatible choice
+[232.93] you have. It's free and open source. It
+[235.73] runs on Nvidia, AMD, Intel, and Apple
+[238.77] hardware, and it can even run on just a
+[241.49] CPU. Out of the 97 mixture of experts
+[244.77] families under 40 billion parameters
+[247.09] that I went through, 58 already run on
+[249.89] it. Now, let's set it up. First, you
+[252.77] clone the repo from GitHub, and you'll
+[254.73] need Git, CMake, and a C++ compiler on
+[257.81] your system. Then, you build it for your
+[260.17] hardware, and this is the one step that
+[262.61] changes from machine to machine. The
+[264.81] repo has a build page with a section for
+[267.09] every kind of hardware, and it tells you
+[269.17] what to install first and which command
+[271.17] to run. So, you find your section, copy
+[273.85] that command, and run it. I'm on an
+[276.09] Nvidia card, so I'll use the CUDA one.
+[278.85] When the build finishes, you'll find
+[280.53] llama.server in the build folder, and
+[282.73] that's the only program we need. You
+[285.01] point it at a model on Hugging Face, and
+[287.13] it downloads the file by itself the
+[289.09] first time. I also set the context size
+[291.65] myself and pick a port. Once it's
+[293.81] loaded, you open that port in your
+[295.49] browser, and you get a full chat
+[297.25] interface. Notice that I didn't say
+[299.53] anything about the split, because
+[301.29] llama.cpp does that for you. It measures
+[304.25] your VRAM, moves the experts into system
+[306.73] RAM, and then pulls as many of them back
+[309.25] onto the card as will fit. If you want
+[311.49] to control it yourself, n_gpu_layers
+[313.81] lets you choose how many layers keep
+[315.77] their experts in RAM. So, how much of a
+[318.41] model is actually experts, and what does
+[321.01] that leave for your graphics card to
+[322.49] hold? Most of it, as it turns out. Take
+[325.73] Qwen 3.6 at 4 bits. The file is about 22
+[329.61] GB, and almost 20 of those GB are
+[332.65] experts. That's 88% of the model, and
+[336.09] it's the same pattern across all 16
+[338.41] models we look at, where experts make up
+[340.73] between 84 and 94% of the file. So, when
+[344.65] those experts go to system RAM, only
+[346.85] about 2 GB of weights are left for the
+[349.05] graphics card. The card also needs room
+[351.57] for the context, which is the model's
+[353.45] working memory of your conversation, and
+[355.85] for the GPU driver's own overhead. At
+[358.33] 32,000 tokens of context, all of that
+[361.37] adds up to about 3 and 1/2 GB. Then,
+[364.69] llama.cpp leaves 1 GB free as a safety
+[368.13] margin. And that's how a 22 GB model
+[371.33] ends up asking for a little over 4 GB of
+[374.13] VRAM. Now, you can adjust that free room
+[376.81] with another flag called fit target. Set
+[379.74] it to 512 and almost any mixture of
+[382.42] experts model under 40 billion
+[384.38] parameters, like Qwen 3.6 35B or LFM 2.5
+[389.21] 24B, fits on a 4 GB card comfortably.
+[393.18] That's why asking how much VRAM you need
+[395.50] is only half the question because the
+[397.77] other 20 GB still have to live
+[399.89] somewhere. Your system RAM matters just
+[402.50] as much here. So, what can you actually
+[405.10] run at each step up the ladder starting
+[407.42] with a 4 GB card?
+[411.01] Before we climb that ladder, here's what
+[413.18] you can do with a model once it's
+[414.81] running. That's where this video's
+[416.69] sponsor comes in. Client Desktop is a
+[419.21] free open-source app for working with
+[421.42] open weight models. Its local models
+[423.89] page checks your hardware and shows you
+[425.86] which models will run well on your
+[427.69] machine with Ollama or LM Studio. Since
+[430.89] we already have llama.cpp running, I
+[433.57] added it as an OpenAI compatible
+[435.57] provider. Then, I asked Qwen 3.6 on my
+[438.89] own card to build a three.js demo and it
+[441.74] had a working page in about a minute and
+[443.69] a half. But sooner or later, a task
+[446.57] outgrows your hardware. So, in that same
+[448.86] session, I switched to Client Pass,
+[451.06] picked DeepSeek v4.1 flash, and asked it
+[454.21] to make the demo look stunning. It kept
+[456.77] rendering the page and fixing what it
+[458.62] saw, and the result is far better.
+[461.45] Client Pass is an optional $9.99 a month
+[464.69] subscription with around five times the
+[466.94] limits of standard API access on a
+[469.18] curated set of open weight models. You
+[471.77] can also start with the free models in
+[473.65] Client, run local models, use over 300
+[476.98] models through the Client provider, or
+[479.06] bring your own API key for more than 50
+[481.50] providers. And it isn't only for code.
+[484.38] You can use it for research and files
+[486.57] and schedule tasks to run by themselves.
+[489.34] So, download Client Desktop for free and
+[491.70] sign up for Client Pass when you need
+[493.42] more than your hardware can give you.
+[495.38] The links are in the description.
+[499.06] Okay, so let's start at the bottom of
+[501.34] the ladder with a 4 GB card. Most people
+[504.42] would expect to be stuck with tiny
+[506.06] models down here, but with Fit Target at
+[508.78] 512, 15 of the 16 models we're looking
+[512.14] at get their GPU part onto this card.
+[515.06] That includes Qwen-3.6, the same 35
+[518.38] billion parameter model we just walked
+[520.42] through. The one that doesn't make it is
+[522.78] K2 Horizon. It needs nearly 6 GB on the
+[526.02] card because it uses far more context
+[528.30] memory than the others. So, we'll come
+[530.38] back to it further up the ladder. Now,
+[533.18] at this step, the card isn't what limits
+[535.62] you. Your system RAM is. Those experts
+[538.54] still have to live somewhere, and for
+[540.42] Qwen-3.6, that's almost 20 GB. Your
+[544.14] operating system and your browser need
+[546.14] their share, too. So, I keep about 4 GB
+[548.94] aside for them. So, with 32 GB of RAM,
+[552.34] all 15 of those models sit fully in
+[554.78] memory on a 4 GB card. Drop to 16 GB,
+[558.58] and that's down to six because the big
+[560.74] ones have nowhere to put all their
+[562.38] experts. At 8 GB, only four are left,
+[565.82] and those are the tiny ones. And going
+[568.18] up to 64 doesn't add a single model at 4
+[571.06] bits because nothing on this list needs
+[573.14] more than 32. But, if your RAM falls
+[575.90] short, you're not locked out of the
+[577.66] bigger models. There's a flag called
+[579.94] load mode, and when you set it to M map,
+[583.18] llama.cpp maps the file on your SSD
+[586.10] instead of copying all of it into RAM.
+[588.86] The weights that Fit stay cached in RAM,
+[591.30] and the rest get read straight from the
+[593.14] SSD when the model needs them. That
+[595.46] means you can still run a model that's
+[597.34] too big for your RAM, but you'll pay for
+[599.50] it in speed. I limited my system to 4 GB
+[602.74] of VRAM, and with 32 GB of RAM, Qwen-3.6
+[606.74] generates at about 33 tokens a second.
+[609.70] With 16 GB, it settles at around 25 to
+[612.90] 30 once it warms up, and it takes about
+[615.50] four times longer to read a long prompt.
+[618.26] So, if you've got an older machine and
+[620.26] you're wondering what to upgrade first,
+[622.46] more RAM can do more for you here than a
+[624.66] bigger graphics card. With 16 GB of RAM,
+[628.02] going from a 4 GB card to an eight only
+[630.90] takes you from six models to 10. Going
+[633.66] to 32 GB of RAM on the same 4 GB card
+[636.98] takes you to 15, and all of them run
+[639.66] without touching the SSD. Quick thing
+[641.98] before we go up the ladder. I test these
+[644.30] models on hardware you can actually buy.
+[646.98] If that's useful to you, subscribe. It
+[649.42] genuinely helps.
+[651.18] But, fitting isn't the same as running
+[653.54] well. Every expert in RAM has to be sent
+[656.06] to the card or worked on by the CPU, and
+[658.98] every expert on the SSD is slower still.
+[662.18] So, what do those two extra GB on a 6 GB
+[665.22] card get you? They get you room for the
+[667.62] expert cache. It's a newer llama.cpp
+[670.62] feature, and you turn it on with a flag
+[672.78] called MoCache, MIB. It uses spare VRAM
+[676.62] to keep the experts your model has used
+[678.62] recently right on [clears throat] the
+[680.02] card. So, the next time the router picks
+[682.18] one of them, it doesn't have to come
+[683.86] from RAM or from the SSD. And it works
+[686.58] with mmap, too. So, only the experts
+[689.06] that aren't in RAM or in the cache ever
+[691.54] have to come off the SSD. For Qwen 3.6,
+[694.82] about 2 GB of cache is a good size.
+[697.86] That's 3.4 GB for the model, two for the
+[700.66] cache, and half a GB of free room, and
+[703.70] all of it just fits on a 6 GB card. Now,
+[707.02] this is also the step where a different
+[709.02] kind of choice shows up. 6 GB is enough
+[711.94] to hold a smaller 8 billion parameter
+[714.22] dense model right on the card, and it
+[716.54] barely needs your RAM at all. But, it's
+[718.70] still well behind Qwen 3.6. And here's
+[721.74] the surprising part. Both of them run at
+[724.34] almost the same speed because a mixture
+[726.90] of experts model only uses a small part
+[729.54] of itself for each token. So, speed
+[732.14] isn't what you're choosing between here.
+[734.26] What the bigger model gives you is
+[735.94] capacity. Those extra parameters can
+[738.50] hold a lot more knowledge than a smaller
+[740.70] dense models weights can, as long as
+[742.98] both were trained on similar data in the
+[744.98] same generation. And that's what makes
+[747.38] it so much smarter. So, even at 6 GB,
+[750.86] I'd go with the big one that leans on
+[752.74] your RAM. So, what changes at 8 GB? This
+[756.34] is where K2 Horizon finally gets onto
+[758.74] the card, and it's the smartest model on
+[761.14] our list. It scores about 25 on the
+[763.78] Artificial Analysis Index, and Qwen 3.6
+[766.82] scores about 18. But, remember why it
+[769.46] had to wait. Because at this step, the
+[771.86] thing that decides everything is
+[773.70] context. Every token in your
+[775.78] conversation takes up space in VRAM, and
+[778.50] each model uses a different amount. Qwen
+[781.18] 3.6 needs about 10 KB per token. K2
+[784.66] Horizon needs about 96. So, just 32,000
+[788.42] tokens of context costs it around
+[791.54] And that's about as far as it can go on
+[793.58] an 8 GB card. And those numbers are
+[796.34] already cut in half. By default,
+[798.70] llama.cpp stores your context as 16-bit
+[801.98] numbers, which it calls F16. But, you
+[804.94] can quantize it down to 8 bits with two
+[807.34] flags, CTK for the keys, and CTV for the
+[811.06] values, both set to Q80. That's why they
+[814.78] were on our launch command, and they
+[816.50] make the context half the size. Without
+[819.18] them, those 32,000 tokens would cost K2
+[822.34] Horizon about 6 GB. Now, look at
+[825.18] Neumotron 3.5 Lightning. It needs about
+[828.18] 3 KB per token, which is 32 times less
+[831.54] than K2 Horizon. So, the same 3 GB that
+[834.70] buys K2 Horizon 32,000 tokens buys
+[837.98] Lightning a full million. It's not as
+[840.58] smart. It scores about 13, but it can
+[843.26] keep a whole code base in its head,
+[845.34] while K2 Horizon is holding a few files.
+[848.26] And Qwen 3.6 sits in the middle. 128,000
+[852.34] tokens costs it about 1.3 GB. So, on
+[855.66] this card, you get a long context, and
+[858.10] you still have room left for the expert
+[860.14] cash. That's why for most people on 8
+[862.98] GB, it's the one I'd run. So, once a
+[865.98] model fits, its context is what you're
+[868.38] really buying with more VRAM. But, none
+[870.98] of that tells you how fast it'll go. So,
+[873.58] what actually sets your speed? Well,
+[876.06] that's the question 12 GB answers,
+[878.70] because your speed comes down to where
+[880.58] the experts are. The memory on a card
+[882.94] like the 3060 moves about 360 GB a
+[886.34] second, and normal dual-channel DDR4
+[889.38] moves about 40 or 50. So, every expert
+[892.66] that sits in RAM is working from memory
+[894.74] that's seven or eight times slower, and
+[897.38] every expert you bring back onto the
+[899.22] card stops waiting on it. And you don't
+[901.78] have to manage any of this yourself,
+[903.82] because AutoFit brings back as many of
+[906.10] them as your card can hold. I ran this
+[908.46] on my own system with 32 GB of RAM, and
+[911.58] I limited the same RTX 3060 to each
+[914.42] step. Gwen 3.6 generates at about 33
+[917.86] tokens a second on 4 GB, about 46 on 8,
+[921.86] and about 51 on the full 12. Notice
+[924.90] what's happening there. The first four
+[926.98] extra GB gave me 13 tokens a second, and
+[930.14] the next four only gave me five. You get
+[932.98] most of the speed early on the ladder.
+[935.26] But, generating isn't the only speed you
+[937.46] care about. Before a model writes
+[939.50] anything, it has to read your prompt,
+[941.86] and that's a separate number called
+[943.62] prefill. Over the same steps, prefill
+[946.22] went from about 370 tokens a second to
+[949.34] about 560.
+[951.46] If you're chatting, you'll barely feel
+[953.26] that. But, if a coding agent hands the
+[955.70] model thousands of lines at a time,
+[957.98] that's the number you sit and wait on.
+[960.38] Now, those prefill numbers come from
+[962.38] llama.cpp's default U batch size of 512,
+[966.38] which is how many tokens it pushes
+[968.06] through at once.
+[969.58] Set it to 1024 with the UB flag, and
+[972.50] prefill jumps by about half, up to
+[974.78] around 860 tokens a second on the full
+[977.82] 12-GB but the bigger batch needs more
+[980.82] VRAM. So, AutoFit has to give that
+[983.22] memory back from somewhere. On 12 and 8
+[986.18] GB, my generation speed didn't really
+[988.58] move, but on four, it dropped from 33 to
+[991.90] 30. So, decode speed, prefill speed, and
+[995.50] context are all paying for the same VRAM
+[998.46] and there's no setting that wins all
+[1000.26] three. You have to find the balance that
+[1002.50] fits how you use the model. And from
+[1004.90] this stage, if you have 64 GB of RAM or
+[1007.86] more, you can start to explore some more
+[1010.22] exotic inference engines like Strata and
+[1013.10] Maya. They're built to overlap SSD
+[1015.66] streaming with expert caching, which
+[1017.82] lets you run much bigger mixture of
+[1019.66] experts models like the 177 billion
+[1022.86] parameter Qwen 3.8 flash using only 12
+[1026.58] GB of VRAM and 64 GB of RAM with the
+[1030.10] rest offloaded to the SSD. And the speed
+[1032.98] is quite usable at around 45 tokens a
+[1035.74] second on decode and about 1,000 on
+[1038.22] prefill.
+[1040.94] Now we're at the top of the ladder and
+[1043.02] 16 GB is where a lot of people think
+[1045.74] local AI finally gets serious. So, what
+[1048.86] does it actually unlock? LFM 2.5 24B
+[1052.58] almost fits completely at about 16 GB
+[1055.62] with its context. So, that's a capable
+[1057.98] model that hardly touches your RAM. But
+[1060.50] Qwen 3.6 would need nearly 24 GB to sit
+[1064.18] fully on a card and K2 Horizon and Flint
+[1067.42] would need more than 26. And this is
+[1069.90] also the point where a dense model comes
+[1072.14] back into the picture. Remember that a
+[1074.22] 27 billion dense model needs around 15
+[1077.34] GB and now your card can hold all of it.
+[1080.98] So, at 16 GB, you can run Qwen 3.8 27B
+[1085.06] with the GS QAR CO quant. And at the
+[1087.74] time I'm making this video, that's the
+[1089.70] best local AI you can run under 100
+[1092.34] billion parameters. Unless you go with
+[1094.42] an insanely expensive 5090 with its 32
+[1097.46] GB. And if you're running one of those,
+[1100.02] you wouldn't be watching this video
+[1101.42] right now. But the mixture of experts
+[1103.66] models on this list still live partly in
+[1105.98] your RAM, even at 16 GB. And that's
+[1109.02] really the lesson of this whole ladder.
+[1111.18] With 32 GB of RAM, all 16 of these
+[1114.30] models were already running back at 8 GB
+[1116.98] of VRAM. For these models, everything
+[1119.58] past that point buys you more speed and
+[1121.86] more context, and it doesn't buy you a
+[1124.06] smarter model. But all 16 models on this
+[1127.02] list are under 40 billion parameters.
+[1129.78] And we just saw that once the SSD is
+[1131.90] part of the picture, a model doesn't
+[1133.94] have to fit in your RAM at all. At the
+[1136.22] start of this video, I said we'd go all
+[1138.34] the way up to 700 billion. So, let's see
+[1141.30] how far that idea really goes. So,
+[1143.62] here's the biggest one I've run so far.
+[1145.94] DeepSeek V4.1 Flash has 763
+[1149.70] billion parameters. Even squeezed down
+[1152.22] to about 2 bits per weight, that's a
+[1154.18] file of close to 200 GB, which is around
+[1157.26] three times the RAM in my machine. But
+[1159.46] it still works for the same reason
+[1161.34] everything else in this video works,
+[1163.38] because it only uses a tiny part of
+[1165.50] itself for each token. The experts it's
+[1168.10] using right now sit on the card. The
+[1170.26] ones it used recently stay in RAM. And
+[1172.90] everything else waits on the SSD until
+[1175.06] the router asks for it. Those are the
+[1177.22] same three tiers we've been climbing
+[1179.02] this whole time. And this is just the
+[1181.42] far end of the ladder. On a 16 GB 5060
+[1185.10] Ti with 64 GB of RAM, my llama.cpp fork
+[1189.62] now reads a prompt at about 350 tokens a
+[1192.74] second, and it generates at about 21.
+[1195.90] That's a lot slower than quant 3.6, and
+[1198.70] I wouldn't pretend otherwise. But this
+[1200.94] is a 700 billion parameter model running
+[1204.14] on one consumer graphics card in my own
+[1206.54] house. Now, this isn't something you'll
+[1208.90] get from a normal llama.cpp build yet. I
+[1211.98] ran it on my own fork with a routing
+[1214.14] shortcut that gives up a little accuracy
+[1216.26] for that speed. And Strata can run the
+[1218.74] same files. But it shows you where all
+[1221.30] of this is heading, and how far the
+[1223.27] hardware you already own can go. Now,
+[1225.94] those big models bring up a debate
+[1227.87] that's been going around. Is it better
+[1229.87] to run a smaller model at a higher
+[1231.79] quant, or a much bigger model at a lower
+[1234.27] one? A lot of people now say a model
+[1236.83] above 100 billion parameters at two or
+[1239.35] three bits beats a model under 40
+[1241.74] billion at four bits. That sounds wrong
+[1244.18] at first, because squeezing weights that
+[1246.31] hard throws away a lot of precision.
+[1248.83] But, think about what each choice costs.
+[1251.42] A lower quant makes every weight a
+[1253.46] little less exact, and the extra
+[1255.59] parameters give the model far more
+[1257.51] capacity to hold what it learned. So,
+[1259.83] you can lose some of the first and still
+[1261.90] come out ahead on the second. I tried
+[1264.11] this myself. I gave Qwen 3.6 and Qwen
+[1267.31] 3.8 Flash at about three bits the same
+[1270.35] three coding tasks with traps built into
+[1272.59] them, and I gave them to Claude Opus 5
+[1275.11] as a reference. Flash matched Opus on
+[1277.83] all three. Qwen 3.6 fixed every bug, but
+[1281.46] it missed one of the checks on the first
+[1283.35] task, and on the third, it passed the
+[1285.66] tests while still getting the job wrong.
+[1288.03] It's only three tasks, so I wouldn't
+[1290.07] call the debate settled, but that's the
+[1292.11] direction I keep seeing. And speed isn't
+[1294.79] really the cost anymore, because Flash
+[1296.94] on Strata runs at almost the same speed
+[1299.51] as Qwen 3.6. So, I'm on the side of the
+[1302.62] bigger model. It won't be as good as its
+[1305.14] own Q8 version, but as long as it's much
+[1307.83] better than the smaller model at Q4, I'd
+[1310.51] still run the bigger one at the lower
+[1312.22] quant. So, let's put all 16 of those
+[1315.11] models on one map, because now you know
+[1317.62] how to read it. Every model has two VRAM
+[1320.46] numbers. The least it can run on with
+[1322.59] its experts in RAM, and what it would
+[1324.66] take to hold the whole thing on the
+[1326.46] card. For the big ones, the first number
+[1329.03] is about 3 GB, and the second is above
+[1332.07] 13. And that gap is what this whole
+[1334.98] video has been about. What surprised me
+[1337.51] is how little size decides here. K2
+[1340.38] Horizon sits at the top with Qwen 3.6
+[1343.46] and Gemma 426B below it. But, LFM 2.524B
+[1348.63] looks like it lands right behind them
+[1350.91] with far fewer parameters. And Link 3
+[1354.03] tiny, at only 8 billion, scores higher
+[1357.15] than GPT-OSS 20B. Now, one warning about
+[1360.83] scores. The number on a model's own page
+[1363.87] and the number from an independent test
+[1365.87] can be very different. Gwen's page says
+[1368.67] Gwen 3.6 solves about 73% of SWE bench
+[1373.23] verified. And on SWE re-bench, which is
+[1376.31] run independently, it gets about 25.
+[1379.67] Both numbers can be true because they're
+[1381.63] different tests on different setups. So,
+[1384.15] don't pick a model from its own chart.
+[1386.47] And if you can, try two or three of them
+[1388.79] on your own work. So, that's the whole
+[1390.99] map. Now, let's find where your machine
+[1393.43] sits on it and what you should actually
+[1395.51] run.
+[1398.07] Okay, so here's what I'd run on each
+[1400.27] machine and you can pause on your own
+[1402.35] row.
+[1403.19] Start with your RAM because that's what
+[1405.15] decides this. If you have 8 GB of RAM,
+[1408.31] stay with the tiny models. Link 3 tiny
+[1410.95] is the best of them. And if you have 6
+[1413.35] GB of VRAM or more, Mel 2.1 is worth
+[1416.87] trying, too.
+[1418.11] With 16 GB of RAM, you've got two good
+[1420.67] options. On a card with 8 GB or more,
+[1423.95] Gemma 426B fits properly in memory. And
+[1427.43] on any card, you can still run Gwen 3.6
+[1430.55] with mmap. And you saw earlier what that
+[1433.07] cost you, which was about 25 to 30
+[1435.51] tokens a second on 4 GB of VRAM.
+[1438.71] 32 GB of RAM is where I'd want you to be
+[1441.79] because with 8 GB of VRAM or less, this
+[1444.63] is where you should run Gwen 3.635B
+[1447.67] or Flint. And if you have a 16 GB card,
+[1451.11] run Gwen 3.827B
+[1453.63] with the GSQRCO quant. And at 64 GB of
+[1457.79] RAM and above, you can start trying
+[1459.71] Strata with the big flash models. And if
+[1462.63] your card has less than 3 GB of VRAM,
+[1465.35] whatever your RAM is, try Link 3 tiny.
+[1468.75] Now, the command doesn't change much
+[1470.63] from what we built earlier. You keep
+[1472.63] context at 32,000 or whatever your work
+[1475.43] needs. You keep CTK and CTV at Q80, and
+[1479.67] you let auto fit do the split. On a
+[1481.95] small card, you set fit target to 512.
+[1485.15] If you have the VRAM to spare, you set
+[1487.35] UB to 1024 for prefill, and you turn on
+[1490.63] more cash MIB for generation. And you
+[1493.19] set your threads to about half your
+[1494.91] cores because mixture of experts models
+[1497.27] get slower when every core is busy.
+[1500.03] So, that's it. You started with a
+[1501.95] question about how much VRAM you need,
+[1504.51] and now you know it was only half the
+[1506.47] question.
+[1509.23] So, that's the ladder. And I hope you've
+[1511.15] noticed that almost nothing in it needed
+[1513.67] new hardware.
+[1515.03] Most of what we did today was flags and
+[1517.27] knowing where your models weights should
+[1518.95] live.
+[1519.87] Not long ago, a model this good needed a
+[1522.51] rack of GPUs or somebody else's server.
+[1525.63] Now, it runs on a card that a lot of you
+[1528.11] already own in a machine that sits in
+[1530.43] your own room. And even a 700 billion
+[1533.67] parameter model can run on one graphics
+[1536.07] card. And that matters more to me than
+[1538.67] any benchmark. Because when it runs on
+[1540.87] your machine, nobody can change it, take
+[1543.55] it away, or read what you send it. You
+[1546.23] decide what it does and when it gets
+[1548.27] switched off. So, try it tonight on
+[1550.47] whatever you've got. Start with the
+[1552.23] command in the description, and if you
+[1553.99] get stuck or you find a better setting
+[1555.99] for your card, come and tell us in the
+[1557.71] comments or on the Discord because
+[1559.67] that's how all of this gets better.
+[1561.91] There are a lot of us doing this now,
+[1563.95] and I'll see you in the next one.

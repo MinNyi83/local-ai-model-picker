@@ -1,0 +1,248 @@
+[
+  {
+    "id": "openai-community/gpt2",
+    "downloads": 31503925,
+    "likes": 3919,
+    "tags": "transformers, pytorch, tf, jax, tflite, rust"
+  },
+  {
+    "id": "Qwen/Qwen3-0.6B",
+    "downloads": 20990189,
+    "likes": 1886,
+    "tags": "transformers, safetensors, qwen3, text-generation, conversational, arxiv:2505.09388"
+  },
+  {
+    "id": "Qwen/Qwen3-14B",
+    "downloads": 12931014,
+    "likes": 534,
+    "tags": "transformers, safetensors, qwen3, text-generation, conversational, arxiv:2309.00071"
+  },
+  {
+    "id": "deepseek-ai/DeepSeek-V3.2",
+    "downloads": 7456221,
+    "likes": 1596,
+    "tags": "transformers, safetensors, deepseek_v32, text-generation, base_model:deepseek-ai/DeepSeek-V3.2-Exp-Base, base_model:finetune:deepseek-ai/DeepSeek-V3.2-Exp-Base"
+  },
+  {
+    "id": "Qwen/Qwen3-8B",
+    "downloads": 6956696,
+    "likes": 2178,
+    "tags": "transformers, safetensors, qwen3, text-generation, conversational, arxiv:2309.00071"
+  },
+  {
+    "id": "unsloth/Qwen3.8-27B-GGUF",
+    "downloads": 6098539,
+    "likes": 5615,
+    "tags": "gguf, qwen3_5, unsloth, base_model:Qwen/Qwen3.8-27B, base_model:quantized:Qwen/Qwen3.8-27B, license:apache-2.0"
+  },
+  {
+    "id": "openai/gpt-oss-20b",
+    "downloads": 5868863,
+    "likes": 5289,
+    "tags": "transformers, safetensors, gpt_oss, text-generation, vllm, conversational"
+  },
+  {
+    "id": "Qwen/Qwen2.5-7B-Instruct",
+    "downloads": 6045279,
+    "likes": 2488,
+    "tags": "transformers, safetensors, qwen2, text-generation, chat, conversational"
+  },
+  {
+    "id": "Qwen/Qwen3-4B",
+    "downloads": 5775391,
+    "likes": 794,
+    "tags": "transformers, safetensors, qwen3, text-generation, conversational, arxiv:2309.00071"
+  },
+  {
+    "id": "ornith-ai/Ornith-1.5-9B-GGUF",
+    "downloads": 5727162,
+    "likes": 652,
+    "tags": "transformers, gguf, text-generation, license:mit, endpoints_compatible, region:us"
+  },
+  {
+    "id": "meta-llama/Llama-3.1-8B-Instruct",
+    "downloads": 4346641,
+    "likes": 8849,
+    "tags": "transformers, safetensors, llama, text-generation, facebook, meta"
+  },
+  {
+    "id": "Qwen/Qwen2.5-1.5B-Instruct",
+    "downloads": 4949566,
+    "likes": 936,
+    "tags": "transformers, safetensors, qwen2, text-generation, chat, conversational"
+  },
+  {
+    "id": "dphn/dolphin-2.9.1-yi-1.5-34b",
+    "downloads": 4847579,
+    "likes": 90,
+    "tags": "transformers, safetensors, llama, text-generation, generated_from_trainer, axolotl"
+  },
+  {
+    "id": "facebook/opt-125m",
+    "downloads": 4724836,
+    "likes": 333,
+    "tags": "transformers, pytorch, tf, jax, opt, text-generation"
+  },
+  {
+    "id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "downloads": 4565456,
+    "likes": 737,
+    "tags": "transformers, safetensors, qwen2, text-generation, chat, conversational"
+  },
+  {
+    "id": "ornith-ai/Ornith-1.5-35B-A3B-GGUF",
+    "downloads": 4167250,
+    "likes": 592,
+    "tags": "transformers, gguf, text-generation, license:mit, endpoints_compatible, region:us"
+  },
+  {
+    "id": "huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF",
+    "downloads": 3868434,
+    "likes": 1854,
+    "tags": "transformers, gguf, abliterated, uncensored, huihui, qwen3"
+  },
+  {
+    "id": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+    "downloads": 3920318,
+    "likes": 677,
+    "tags": "Model Optimizer, safetensors, qwen3_5_moe, nvidia, ModelOpt, Qwen3.6"
+  },
+  {
+    "id": "Qwen/Qwen3-1.7B",
+    "downloads": 3905849,
+    "likes": 615,
+    "tags": "transformers, safetensors, qwen3, text-generation, conversational, arxiv:2505.09388"
+  },
+  {
+    "id": "EleutherAI/pythia-160m",
+    "downloads": 3485726,
+    "likes": 66,
+    "tags": "transformers, pytorch, safetensors, gpt_neox, text-generation, causal-lm"
+  },
+  {
+    "id": "ISTA-DASLab/DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF",
+    "downloads": 3146330,
+    "likes": 639,
+    "tags": "gguf, gsq, rco, quantization, mixed-precision, ist-daslab"
+  },
+  {
+    "id": "farbodtavakkoli/OTel-2.0-Decision-26B-A4B-4bit",
+    "downloads": 3116103,
+    "likes": 7,
+    "tags": "safetensors, gguf, gemma4, telecom, telecommunications, open-telco-ai"
+  },
+  {
+    "id": "deepseek-ai/DeepSeek-V4-Flash-0731",
+    "downloads": 2701813,
+    "likes": 4098,
+    "tags": "transformers, safetensors, deepseek_v4, text-generation, arxiv:2606.19348, license:mit"
+  },
+  {
+    "id": "Qwen/Qwen3-32B",
+    "downloads": 2971164,
+    "likes": 792,
+    "tags": "transformers, safetensors, qwen3, text-generation, conversational, arxiv:2309.00071"
+  },
+  {
+    "id": "Qwen/Qwen2.5-3B-Instruct",
+    "downloads": 2668622,
+    "likes": 638,
+    "tags": "transformers, safetensors, qwen2, text-generation, chat, conversational"
+  },
+  {
+    "id": "JonathanColetti/Qwen3.8-27B-Uncensored-GGUF",
+    "downloads": 2515596,
+    "likes": 1947,
+    "tags": "llama.cpp, gguf, uncensored, qwen3.8, mtp, speculative-decoding"
+  },
+  {
+    "id": "Qwen/Qwen3-4B-Instruct-2507",
+    "downloads": 2582915,
+    "likes": 1047,
+    "tags": "transformers, safetensors, qwen3, text-generation, conversational, arxiv:2505.09388"
+  },
+  {
+    "id": "HauhauCS/Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-MTP-GGUF",
+    "downloads": 2294643,
+    "likes": 2345,
+    "tags": "gguf, uncensored, qwen3.8, multimodal, vision, mtp"
+  },
+  {
+    "id": "DavidAU/Qwen3.5-9B-The-Defiant-Fable-Uncensored-Heretic-NEO-IMATRIX-MAX-MTP-GGUF",
+    "downloads": 2069727,
+    "likes": 1483,
+    "tags": "gguf, MTP GGUFS, Regular GGUFS, NEO Imatrix, fine tune, unsloth"
+  },
+  {
+    "id": "prism-ml/Ternary-Bonsai-2-27B-gguf",
+    "downloads": 1688388,
+    "likes": 2967,
+    "tags": "llama.cpp, gguf, ternary, 2-bit, llama-cpp, cuda"
+  },
+  {
+    "id": "DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF",
+    "downloads": 1553252,
+    "likes": 2718,
+    "tags": "gguf, unsloth, fine tune, heretic, uncensored, abliterated"
+  },
+  {
+    "id": "mradermacher/Ornith-1.5-9B-uncensored-GGUF",
+    "downloads": 1747219,
+    "likes": 275,
+    "tags": "transformers, gguf, ornith, qwen3_5, abliterated, uncensored"
+  },
+  {
+    "id": "HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
+    "downloads": 1291303,
+    "likes": 4123,
+    "tags": "gguf, uncensored, qwen3.6, moe, vision, multimodal"
+  },
+  {
+    "id": "ISTA-DASLab/Qwen3.8-27B-GSQ-RCO-GGUF",
+    "downloads": 1356381,
+    "likes": 2592,
+    "tags": "gguf, gsq, rco, quantization, mixed-precision, ist-daslab"
+  },
+  {
+    "id": "0bserverx/Qwen3.8-27B-Heretic-Abliterated-Uncensored-GGUF",
+    "downloads": 1124712,
+    "likes": 860,
+    "tags": "transformers, safetensors, gguf, qwen3.8, qwen3.5, heretic"
+  },
+  {
+    "id": "orcarouter/Qwen3.8-Flash-Next-Uncensored-GGUF",
+    "downloads": 952335,
+    "likes": 1356,
+    "tags": "gguf, abliterated, uncensored, qwen, qwen3.8, qwen4"
+  },
+  {
+    "id": "AtomicChat/Qwen-Image-2.1-Turbo-Uncensored-GGUF",
+    "downloads": 813982,
+    "likes": 763,
+    "tags": "gguf, atomic-chat, qwen, qwen-image, qwen3-vl, text-encoder"
+  },
+  {
+    "id": "HauhauCS/Gemma4-12B-QAT-Uncensored-HauhauCS-Balanced",
+    "downloads": 685294,
+    "likes": 540,
+    "tags": "gguf, uncensored, gemma4, vision, multimodal, agentic"
+  },
+  {
+    "id": "DavidAU/Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF",
+    "downloads": 388960,
+    "likes": 2503,
+    "tags": "gguf, unsloth, fine tune, heretic, uncensored, abliterated"
+  },
+  {
+    "id": "empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF",
+    "downloads": 182419,
+    "likes": 2947,
+    "tags": "gguf, llama.cpp, quantized, qwen3.5, reasoning, uncensored"
+  },
+  {
+    "id": "yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF",
+    "downloads": 114763,
+    "likes": 3003,
+    "tags": "gguf, gemma4, coding, code, reasoning, thinking"
+  }
+]
