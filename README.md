@@ -31,6 +31,26 @@ open dist/LocalAIModelPicker.app   # or drag into /Applications
 - 📋 Copy & ▶ Run commands in new terminal
 - 🖱️ Clickable buttons everywhere
 
+## 📸 Screenshots
+
+**🏠 Home** — quick start + hardware snapshot
+![Home tab](screenshots/01_home.png)
+
+**🖥️ Hardware** — auto-detected CPU / RAM / GPU / VRAM
+![Hardware tab](screenshots/02_hardware.png)
+
+**💡 Recommend** — model recommendation for your VRAM tier
+![Recommend tab](screenshots/03_recommend.png)
+
+**🛠️ Setup** — step-by-step backend guides
+![Setup tab](screenshots/04_setup.png)
+
+**📊 Models** — 45-model database + 10-tier VRAM ladder
+![Models tab](screenshots/05_models.png)
+
+**🌐 Online** — live HuggingFace data (incl. uncensored)
+![Online tab](screenshots/06_online.png)
+
 ## 📁 Files
 - `gui.py` - GUI app source (Tkinter)
 - `app.py` - TUI app source (optional)

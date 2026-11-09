@@ -12,6 +12,9 @@ No prior experience needed. Follow the steps in order.
    - 🐧 Linux: run `./run.sh`.
 2. The app opens. Go to the **🖥️ Hardware** tab.
 3. You will see your GPU, VRAM, RAM, and CPU detected automatically.
+
+![Hardware tab - auto-detected specs](screenshots/02_hardware.png)
+
    - 💡 If VRAM shows 0, install your GPU drivers (Nvidia/AMD) and retry.
    - 🍎 Apple Silicon (M1/M2/M3/M4): VRAM = your total RAM (unified memory), so an M3 with 16 GB runs 16 GB-class models.
 
@@ -22,6 +25,8 @@ No prior experience needed. Follow the steps in order.
 3. Click **🔄 Suggest updated model** to refresh the suggestion.
 4. Note the suggested model name (e.g. "Qwen 3.6 35B").
 
+![Recommend tab - what your machine can run](screenshots/03_recommend.png)
+
 ## 🛠️ Step 3: Pick a backend (easiest first)
 
 For beginners, start with **Ollama** (no compiling needed):
@@ -29,6 +34,9 @@ For beginners, start with **Ollama** (no compiling needed):
 1. Go to the **🛠️ Setup** tab.
 2. Choose **Ollama** from the dropdown.
 3. Read the guide (5 simple steps).
+
+![Setup tab - step-by-step guides](screenshots/04_setup.png)
+
 4. Download Ollama from https://ollama.com and install it.
 5. Open a terminal and run:
    - `ollama pull qwen3.6:35b`
@@ -47,7 +55,13 @@ If you want more speed and control:
 ## 📊 Step 5: Explore models
 
 1. Go to **📊 Models** tab to see the model ladder.
+
+![Models tab - 45 models + VRAM tiers](screenshots/05_models.png)
+
 2. Go to **🌐 Online** tab and click "Update models (online)" to see latest models from HuggingFace.
+
+![Online tab - live HuggingFace data](screenshots/06_online.png)
+
 3. Pick a model that fits your VRAM (see VRAM column).
 
 ## ⌨️ Step 6: Copy & Run commands

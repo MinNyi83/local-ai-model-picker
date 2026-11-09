@@ -17,10 +17,13 @@
 3. ▶️ Run `chmod +x run.sh && ./run.sh`
 
 ## 🎯 What the app does
+
+![Home tab - quick start + hardware snapshot](screenshots/01_home.png)
+
 - 🖥️ Hardware: detects your GPU/VRAM, RAM, CPU (auto on load)
 - 💡 Recommend: picks a model + tier; click "Suggest updated model"
 - 🛠️ Setup: step-by-step guides for 7 backends with copy/run commands
-- 📊 Models: 13-model ladder + VRAM tiers + live HuggingFace fetch (incl. uncensored)
+- 📊 Models: 45-model database + 10-tier VRAM ladder + live HuggingFace fetch (incl. uncensored)
 - ⌨️ Command: starter command + notes + customize choice (model/backend dropdowns)
 - 🏠 Home: quick start + hardware snapshot + actions
 - ℹ️ About: creator (Nyi Min) + YouTube credit (https://www.youtube.com/watch?v=tek-IY9BRWc)
